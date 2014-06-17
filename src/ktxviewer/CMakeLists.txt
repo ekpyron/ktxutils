@@ -1,5 +1,5 @@
 find_package (glfw REQUIRED)
-find_package (glew REQUIRED)
+find_package (GLEW REQUIRED)
 find_package (OpenGL REQUIRED)
 
 file (GLOB KTXVIEWER_SOURCES *.c)

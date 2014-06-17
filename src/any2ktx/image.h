@@ -21,6 +21,7 @@
 #define IMAGE_H
 
 #include <stdint.h>
+#include <stddef.h>
 
 typedef struct image {
 	size_t width;
