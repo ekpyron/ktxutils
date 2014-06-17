@@ -1,0 +1,2 @@
+* add glGetError() checks
+* split anyktx/main.c into several files
