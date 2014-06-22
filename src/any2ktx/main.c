@@ -281,7 +281,7 @@ unsigned int intlog2 (unsigned int v)
 int main (int argc, char *argv[])
 {
 	if (!parse_options (argc, argv)) {
-		fprintf (stderr, "Invalid arguments. For help type %s -h.", argv[0]);
+		fprintf (stderr, "Invalid arguments. For help type %s -h.\n", argv[0]);
 		return -1;
 	}
 
