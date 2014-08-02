@@ -127,6 +127,7 @@ int parse_options (int argc, char **argv)
 			{ "format", required_argument, 0, 'f' },
 			{ "internal", required_argument, 0, 'i' },
 			{ "levels", required_argument, 0, 'l' },
+			{ 0, 0, 0, 0 }
 	};
 
 	while (1)
