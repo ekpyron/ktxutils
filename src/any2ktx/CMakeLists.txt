@@ -9,3 +9,5 @@ include_directories (${ImageMagick_INCLUDE_DIRS} ${GLFW_INCLUDE_DIR} ${GLEW_INCL
 
 add_executable (any2ktx ${ANY2KTX_SOURCES})
 target_link_libraries (any2ktx ${GLFW_LIBRARY} ${OPENGL_LIBRARY} ${GLEW_LIBRARY} ${ImageMagick_LIBRARIES})
+
+install (TARGETS any2ktx RUNTIME DESTINATION bin)

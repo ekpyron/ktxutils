@@ -8,3 +8,5 @@ include_directories (${GLFW_INCLUDE_DIR} ${GLEW_INCLUDE_DIR})
 
 add_executable (ktxviewer ${KTXVIEWER_SOURCES})
 target_link_libraries (ktxviewer ${GLFW_LIBRARY} ${OPENGL_LIBRARY} ${GLEW_LIBRARY})
+
+install (TARGETS ktxviewer RUNTIME DESTINATION bin)
