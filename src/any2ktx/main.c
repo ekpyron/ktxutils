@@ -506,17 +506,18 @@ int main (int argc, char *argv[])
 			}
 
 			int level;
+			void *data = malloc ((header.pixelWidth * header.pixelHeight * pixelSize + 0xFF) & ~0xFF);
 			for (level = 0; level < ((header.numberOfMipmapLevels == 0) ? 1 : header.numberOfMipmapLevels); level++)
 			{
 				uint32_t imageSize = (header.pixelWidth >> level) * (header.pixelHeight >> level) * pixelSize;
 				if (fwrite (&imageSize, 1, sizeof (uint32_t), f) != sizeof (uint32_t)) {
+					free (data);
 					fclose (f);
 					fprintf (stderr, "Could not write image size.\n");
 					cleanup ();
 					return -1;
 				}
 
-				void *data = malloc (imageSize);
 				glGetTexImage (GL_TEXTURE_2D, level, header.glFormat, header.glType, data);
 				if (fwrite (data, 1, imageSize, f) != imageSize) {
 					free (data);
@@ -525,7 +526,6 @@ int main (int argc, char *argv[])
 					cleanup ();
 					return -1;
 				}
-				free (data);
 
 				{
 					int i;
@@ -534,6 +534,7 @@ int main (int argc, char *argv[])
 					}
 				}
 			}
+			free (data);
 		}
 	}
 
