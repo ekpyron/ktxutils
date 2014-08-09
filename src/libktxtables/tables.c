@@ -223,6 +223,19 @@ GLenum table_lookup (const table_entry_t *table, const char *name)
 	return 0;
 }
 
+const char *table_reverse_lookup (const table_entry_t *table, GLenum value)
+{
+	const table_entry_t *entry;
+	for (entry = table; entry->name != NULL; entry++)
+	{
+		if (entry->value == value)
+		{
+			return entry->name;
+		}
+	}
+	return 0;
+}
+
 GLenum base_format_table_lookup (const base_format_table_entry_t *table, const char *name, GLenum *baseformat)
 {
 	const base_format_table_entry_t *entry;
@@ -232,6 +245,21 @@ GLenum base_format_table_lookup (const base_format_table_entry_t *table, const c
 		if (result != 0)
 		{
 			*baseformat = entry->baseformat;
+			return result;
+		}
+	}
+	return 0;
+}
+
+const char *base_format_table_reverse_lookup (const base_format_table_entry_t *table, GLenum value, GLenum *baseformat)
+{
+	const base_format_table_entry_t *entry;
+	for (entry = table; entry->formats != NULL; entry++)
+	{
+		const char *result = table_reverse_lookup (entry->formats, value);
+		if (result != 0)
+		{
+			if (baseformat != 0) *baseformat = entry->baseformat;
 			return result;
 		}
 	}

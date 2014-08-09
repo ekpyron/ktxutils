@@ -68,6 +68,18 @@ image_t *load_image (const char *filename)
 		return NULL;
 	}
 
+	if (MagickGetImageAlphaChannel (wand) == MagickFalse)
+	{
+		size_t x, y;
+		for (y = 0; y < image->height; y++)
+		{
+			for (x = 0; x < image->width; x++)
+			{
+				image->data[(y * image->width + x) * 4 + 3] = 1.0f;
+			}
+		}
+	}
+
 	DestroyMagickWand (wand);
 	MagickWandTerminus ();
 

@@ -1,4 +1,6 @@
 include_directories (include)
+add_subdirectory (libktxtables)
 add_subdirectory (any2ktx)
 add_subdirectory (ktxgencubemap)
+add_subdirectory (ktxinfo)
 add_subdirectory (ktxviewer)

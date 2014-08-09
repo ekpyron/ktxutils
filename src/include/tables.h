@@ -41,4 +41,7 @@ extern base_format_table_entry_t compressed_internal_format_table[];
 GLenum table_lookup (const table_entry_t *table, const char *name);
 GLenum base_format_table_lookup (const base_format_table_entry_t *table, const char *name, GLenum *baseformat);
 
+const char *table_reverse_lookup (const table_entry_t *table, GLenum value);
+const char *base_format_table_reverse_lookup (const base_format_table_entry_t *table, GLenum value, GLenum *baseformat);
+
 #endif /* TABLES_H */
