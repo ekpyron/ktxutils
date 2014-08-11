@@ -32,6 +32,8 @@ void WandException (MagickWand *wand)
 	MagickRelinquishMemory (desc);
 }
 
+extern float defaultalpha;
+
 image_t *load_image (const char *filename)
 {
 	MagickWand *wand;
@@ -75,7 +77,7 @@ image_t *load_image (const char *filename)
 		{
 			for (x = 0; x < image->width; x++)
 			{
-				image->data[(y * image->width + x) * 4 + 3] = 1.0f;
+				image->data[(y * image->width + x) * 4 + 3] = defaultalpha;
 			}
 		}
 	}

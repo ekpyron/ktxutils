@@ -39,6 +39,8 @@ image_t *source = NULL;
 
 const char *dest_filename = NULL;
 
+float defaultalpha = 1.0f;
+
 int SetType (const char *type_name)
 {
 	if (header.glType != 0)
@@ -95,6 +97,18 @@ int SetLevels (const char *levelstr)
 	return 1;
 }
 
+int SetDefaultAlpha (const char *alphastr)
+{
+	char *endptr;
+	defaultalpha = strtof (alphastr, &endptr);
+	if (alphastr + strlen (alphastr) != endptr)
+	{
+		fprintf (stderr, "Invalid default alpha value requested.\n");
+		return 0;
+	}
+	return 1;
+}
+
 void usage (char *appname)
 {
 	fprintf (stdout, "Usage: %s [options] source dest\n"
@@ -108,7 +122,9 @@ void usage (char *appname)
 			"                            uncompressed image data or alternatively\n"
 			"                            a compressed storage format.\n"
 			"  -l, --levels [levels]     Specify the number of mipmap levels to\n"
-			"                             include in the output file.\n"
+			"                            include in the output file.\n"
+			"  -a, --alpha [value]       Specify the default alpha value to be used if\n"
+			"                            the input image doesn't have an alpha channel\n"
 			"  -d, --display             Displays the image rather than converting it.\n"
 			"\n"
 			"Arguments:\n"
@@ -127,18 +143,22 @@ int parse_options (int argc, char **argv)
 			{ "format", required_argument, 0, 'f' },
 			{ "internal", required_argument, 0, 'i' },
 			{ "levels", required_argument, 0, 'l' },
+			{ "alpha", required_argument, 0, 'a' },
 			{ 0, 0, 0, 0 }
 	};
 
 	while (1)
 	{
 		int option_index = 0;
-		c = getopt_long (argc, argv, "t:f:l:i:hd", long_options, &option_index);
+		c = getopt_long (argc, argv, "t:f:l:i:a:hd", long_options, &option_index);
 
 		if (c== -1) break;
 
 		switch (c)
 		{
+		case 'a':
+			if (!SetDefaultAlpha (optarg)) return 0;
+			break;
 		case 'd':
 			display = 1;
 			break;
