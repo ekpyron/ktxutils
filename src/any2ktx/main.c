@@ -41,6 +41,15 @@ const char *dest_filename = NULL;
 
 float defaultalpha = 1.0f;
 
+typedef struct keyvaluedata
+{
+	struct keyvaluedata *next;
+	uint32_t len;
+	char data[];
+} keyvaluedata_t;
+keyvaluedata_t *first_key_value_entry = NULL;
+keyvaluedata_t *last_key_value_entry = NULL;
+
 int SetType (const char *type_name)
 {
 	if (header.glType != 0)
@@ -109,6 +118,30 @@ int SetDefaultAlpha (const char *alphastr)
 	return 1;
 }
 
+int AddKeyValueData (const char *key, const char *value)
+{
+	uint32_t keylen = strlen (key);
+	uint32_t valuelen = strlen (value);
+	uint32_t len = keylen + valuelen + 2;
+	header.bytesOfKeyValueData += sizeof (uint32_t) + len + (3 - ((len + 3) % 4));
+
+	keyvaluedata_t *data = (keyvaluedata_t*) malloc (sizeof (keyvaluedata_t) + len);
+	data->next = NULL;
+	data->len = len;
+	memcpy (&data->data[0], key, keylen + 1);
+	memcpy (&data->data[keylen + 1], value, valuelen + 1);
+	if (first_key_value_entry == NULL)
+		first_key_value_entry = data;
+	if (last_key_value_entry == NULL)
+		last_key_value_entry = data;
+	else
+	{
+		last_key_value_entry->next = data;
+		last_key_value_entry = data;
+	}
+	return 1;
+}
+
 void usage (char *appname)
 {
 	fprintf (stdout, "Usage: %s [options] source dest\n"
@@ -126,6 +159,8 @@ void usage (char *appname)
 			"  -a, --alpha [value]       Specify the default alpha value to be used if\n"
 			"                            the input image doesn't have an alpha channel\n"
 			"  -d, --display             Displays the image rather than converting it.\n"
+			"  -k, --key [key]           Specify a key for optional key value data.\n"
+			"  -v, --value [value]       Specify a value for optional key value data.\n"
 			"\n"
 			"Arguments:\n"
 			"  source                    Input image.\n"
@@ -136,6 +171,7 @@ void usage (char *appname)
 int parse_options (int argc, char **argv)
 {
 	int c = 0;
+	char *key = NULL;
 	static struct option long_options[] = {
 			{ "help", no_argument, 0, 'h' },
 			{ "display", no_argument, 0, 'd' },
@@ -144,13 +180,15 @@ int parse_options (int argc, char **argv)
 			{ "internal", required_argument, 0, 'i' },
 			{ "levels", required_argument, 0, 'l' },
 			{ "alpha", required_argument, 0, 'a' },
+			{ "key", required_argument, 0, 'k' },
+			{ "value", required_argument, 0, 'v' },
 			{ 0, 0, 0, 0 }
 	};
 
 	while (1)
 	{
 		int option_index = 0;
-		c = getopt_long (argc, argv, "t:f:l:i:a:hd", long_options, &option_index);
+		c = getopt_long (argc, argv, "t:f:l:i:a:k:v:hd", long_options, &option_index);
 
 		if (c== -1) break;
 
@@ -177,7 +215,30 @@ int parse_options (int argc, char **argv)
 		case 'l':
 			if (!SetLevels (optarg)) return 0;
 			break;
+		case 'k':
+			if (key != NULL)
+			{
+				fprintf (stderr, "A key without a value was specified.\n");
+				return 0;
+			}
+			key = optarg;
+			break;
+		case 'v':
+			if (key == NULL)
+			{
+				fprintf (stderr, "A value without a key was specified.\n");
+				return 0;
+			}
+			if (!AddKeyValueData (key, optarg)) return 0;
+			key = NULL;
+			break;
 		}
+	}
+
+	if (key != NULL)
+	{
+		fprintf (stderr, "A key without a value was specified.\n");
+		return 0;
 	}
 
 	if (header.glInternalFormat == 0)
@@ -280,6 +341,12 @@ GLuint load_texture (image_t *image)
 
 void cleanup (void)
 {
+	while (first_key_value_entry != NULL)
+	{
+		keyvaluedata_t *data = first_key_value_entry;
+		first_key_value_entry = first_key_value_entry->next;
+		free (data);
+	}
     if (texture)
     	glDeleteTextures (1, &texture);
 
@@ -378,6 +445,22 @@ int main (int argc, char *argv[])
 			fprintf (stderr, "Could not write ktx header.\n");
 			cleanup ();
 			return -1;
+		}
+
+		{
+			keyvaluedata_t *data;
+			for (data = first_key_value_entry; data != NULL; data = data->next)
+			{
+				int i;
+				if (fwrite (&data->len, 1, sizeof (uint32_t) + data->len, f) != sizeof (uint32_t) + data->len) {
+					fclose (f);
+					fprintf (stderr, "Could not write key value pair.\n");
+					cleanup ();
+					return -1;
+				}
+				for (i = 0; i < (3 - ((data->len + 3) % 4)); i++)
+					fputc (0, f);
+			}
 		}
 
 		if (compressed)
