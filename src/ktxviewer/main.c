@@ -21,6 +21,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "ktx.h"
+#include <string.h>
 
 GLFWwindow *window = NULL;
 FILE *f = NULL;

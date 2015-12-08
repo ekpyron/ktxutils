@@ -17,6 +17,11 @@
  * along with ktxutils.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "tables.h"
+#include <string.h>
+
+#ifndef GL_ETC1_RGB8_OES
+#define GL_ETC1_RGB8_OES           0x8D64
+#endif
 
 table_entry_t type_table[] = {
 		TABLE_ENTRY (GL_UNSIGNED_BYTE),
@@ -185,6 +190,7 @@ base_format_table_entry_t compressed_internal_format_table[] = {
 						TABLE_ENTRY (GL_COMPRESSED_RGB_S3TC_DXT1_EXT),
 						TABLE_ENTRY (GL_COMPRESSED_RGB8_ETC2),
 						TABLE_ENTRY (GL_COMPRESSED_SRGB8_ETC2),
+						TABLE_ENTRY (GL_ETC1_RGB8_OES),
 						{ NULL, 0 }
 				}
 		},
