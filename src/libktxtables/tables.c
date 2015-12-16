@@ -68,6 +68,9 @@ table_entry_t format_table[] = {
 base_format_table_entry_t internal_format_table[] = {
 		{
 				GL_RED, (table_entry_t[]) {
+						TABLE_ENTRY (GL_RED),
+						TABLE_ENTRY (GL_LUMINANCE),
+						TABLE_ENTRY (GL_ALPHA),
 						TABLE_ENTRY (GL_R8),
 						TABLE_ENTRY (GL_R8_SNORM),
 						TABLE_ENTRY (GL_R16),
@@ -85,6 +88,8 @@ base_format_table_entry_t internal_format_table[] = {
 		},
 		{
 				GL_RG, (table_entry_t[]) {
+						TABLE_ENTRY (GL_RG),
+						TABLE_ENTRY (GL_LUMINANCE_ALPHA),
 						TABLE_ENTRY (GL_RG8),
 						TABLE_ENTRY (GL_RG8_SNORM),
 						TABLE_ENTRY (GL_RG16),
@@ -102,6 +107,7 @@ base_format_table_entry_t internal_format_table[] = {
 		},
 		{
 				GL_RGB, (table_entry_t[]) {
+						TABLE_ENTRY (GL_RGB),
 						TABLE_ENTRY (GL_R3_G3_B2),
 						TABLE_ENTRY (GL_RGB4),
 						TABLE_ENTRY (GL_RGB5),
@@ -126,6 +132,7 @@ base_format_table_entry_t internal_format_table[] = {
 		},
 		{
 				GL_RGBA, (table_entry_t[]) {
+						TABLE_ENTRY (GL_RGBA),
 						TABLE_ENTRY (GL_RGBA2),
 						TABLE_ENTRY (GL_RGBA4),
 						TABLE_ENTRY (GL_RGB5_A1),
