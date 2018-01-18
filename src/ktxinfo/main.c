@@ -18,6 +18,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <memory.h>
 #include "ktx.h"
 #include "tables.h"
 
