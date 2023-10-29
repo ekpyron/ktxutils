@@ -24,7 +24,7 @@
 #include <string.h>
 #define MAGICKCORE_QUANTUM_DEPTH 32
 #define MAGICKCORE_HDRI_ENABLE 1
-#include <wand/MagickWand.h>
+#include <MagickWand/MagickWand.h>
 
 GLFWwindow *window = NULL;
 FILE *f = NULL;

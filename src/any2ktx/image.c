@@ -20,7 +20,7 @@
 #include "image.h"
 #define MAGICKCORE_QUANTUM_DEPTH 32
 #define MAGICKCORE_HDRI_ENABLE 1
-#include <wand/MagickWand.h>
+#include <MagickWand/MagickWand.h>
 #include <stdlib.h>
 
 void WandException (MagickWand *wand)
